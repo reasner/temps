@@ -108,6 +108,28 @@ for ftype in filetype:
     data_cols = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     dataframes[ftype][data_cols] = dataframes[ftype][data_cols].apply(pd.to_numeric)
     mean_dataframes[ftype] = dataframes[ftype].groupby(['fips'])[data_cols].mean().round(1)
+    mean_dataframes[ftype] = mean_dataframes[ftype].reset_index()
+    #Shannon County, SD
+    sd_data = mean_dataframes[ftype][(mean_dataframes[ftype]['fips'] == '46007') \
+                     | (mean_dataframes[ftype]['fips'] == '46033') \
+                     | (mean_dataframes[ftype]['fips'] == '46047') \
+                     | (mean_dataframes[ftype]['fips'] == '46071')]
+    sd_add = list(sd_data.mean()[1:].round(1))
+    sd_add.insert(0,'46113')
+    add_cols = data_cols.copy()
+    add_cols.insert(0,'fips')
+    sd_add_df = pd.DataFrame(sd_add,index=add_cols).T
+    mean_dataframes[ftype] = mean_dataframes[ftype].append(sd_add_df)
+    #Washington, D.C.
+    dc_data = mean_dataframes[ftype][(mean_dataframes[ftype]['fips'] == '51013') \
+                     | (mean_dataframes[ftype]['fips'] == '51510') \
+                     | (mean_dataframes[ftype]['fips'] == '24031') \
+                     | (mean_dataframes[ftype]['fips'] == '24033')]
+    dc_add = list(sd_data.mean()[1:].round(1))
+    dc_add.insert(0,'11001')
+    dc_add_df = pd.DataFrame(dc_add,index=add_cols).T
+    mean_dataframes[ftype] = mean_dataframes[ftype].append(dc_add_df)
+
 
 #APPLY FIPS MAPPING (AVERAGE WITHIN A NEW_FIPS IF MULTIPLE)
 fips_crosswalk_filepath = os.path.join(cd_dotdot,r'uniform_counties',r'fips_crosswalk.csv')
@@ -203,3 +225,5 @@ tmin = mean_dataframes['tmincy']
 tmin.to_csv('tmin.csv',index=False)
 tavg = mean_dataframes['tmpccy']
 tavg.to_csv('tavg.csv',index=False)
+
+
