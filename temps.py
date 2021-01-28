@@ -11,13 +11,15 @@ if not os.path.exists(os.path.join(cd,r'temps_by_state')):
 land_area_dtypes = {'fips':'str','land_area':'float'}
 land_area = pd.read_csv('land_area_2010.csv',dtype=land_area_dtypes)
 land_area['land_area'] = land_area['land_area'].round(1)
-land_area_add = [['12025','51560','51780'], [1898.8,3.1,13.2]]
+land_area_add = [['12025','51560','51780'], [1897.7,3.1,13.2]]
 land_area_add_df = pd.DataFrame(land_area_add, index=['fips', 'land_area']).T
 land_area = land_area.append(land_area_add_df)
 land_area_mdf = land_area[~(land_area['fips'] == '12025') & ~(land_area['fips'] == '51560') & \
                           ~(land_area['fips'] == '51580') & ~(land_area['fips'] == '51515') & \
                           ~(land_area['fips'] == '51780') & ~(land_area['fips'] == '51530') & \
                           ~(land_area['fips'] == '51678')]
+land_area = land_area[land_area['fips'] != '12086']
+
 #DAILY WEATHER DATA
 #load as .csv
 #normal states
