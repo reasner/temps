@@ -14,7 +14,10 @@ land_area['land_area'] = land_area['land_area'].round(1)
 land_area_add = [['12025','51560','51780'], [1898.8,3.1,13.2]]
 land_area_add_df = pd.DataFrame(land_area_add, index=['fips', 'land_area']).T
 land_area = land_area.append(land_area_add_df)
-
+land_area_mdf = land_area[~(land_area['fips'] == '12025') & ~(land_area['fips'] == '51560') & \
+                          ~(land_area['fips'] == '51580') & ~(land_area['fips'] == '51515') & \
+                          ~(land_area['fips'] == '51780') & ~(land_area['fips'] == '51530') & \
+                          ~(land_area['fips'] == '51678')]
 #DAILY WEATHER DATA
 #load as .csv
 #normal states
@@ -107,8 +110,7 @@ for ftype in filetype:
     dataframes[ftype] = dataframes[ftype][(dataframes[ftype]['year'].astype(int) < 2001) & (dataframes[ftype]['year'].astype(int) > 1969)].copy()
     data_cols = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     dataframes[ftype][data_cols] = dataframes[ftype][data_cols].apply(pd.to_numeric)
-    mean_dataframes[ftype] = dataframes[ftype].groupby(['fips'])[data_cols].mean().round(1)
-    mean_dataframes[ftype] = mean_dataframes[ftype].reset_index()
+    mean_dataframes[ftype] = dataframes[ftype].groupby(['fips'],as_index=False)[data_cols].mean().round(1)
     #Shannon County, SD
     sd_data = mean_dataframes[ftype][(mean_dataframes[ftype]['fips'] == '46007') \
                      | (mean_dataframes[ftype]['fips'] == '46033') \
@@ -130,7 +132,6 @@ for ftype in filetype:
     dc_add_df = pd.DataFrame(dc_add,index=add_cols).T
     mean_dataframes[ftype] = mean_dataframes[ftype].append(dc_add_df)
 
-
 #APPLY FIPS MAPPING (AVERAGE WITHIN A NEW_FIPS IF MULTIPLE)
 fips_crosswalk_filepath = os.path.join(cd_dotdot,r'uniform_counties',r'fips_crosswalk.csv')
 fips_crosswalk = pd.read_csv(fips_crosswalk_filepath)
@@ -143,6 +144,9 @@ fips_crosswalk = fips_crosswalk.drop_duplicates(subset=['fips','new_fips'])
 #land_area
 land_area_mapped = pd.merge(land_area,fips_crosswalk,on=['fips'],how='right')
 land_area_mapped['new_land_area'] = land_area_mapped['land_area'].groupby(land_area_mapped['new_fips']).transform('sum').round(1)
+land_area_mapped_mdf = pd.merge(land_area_mdf,fips_crosswalk,on=['fips'],how='right')
+land_area_mapped_mdf['new_land_area'] = land_area_mapped_mdf['land_area'].groupby(land_area_mapped_mdf['new_fips']).transform('sum').round(1)
+
 #extreme
 extreme_df = pd.merge(extreme_df,fips_crosswalk,on=['fips'],how='inner') #don't need Yellowstone national park (30113)
 extreme_df = pd.merge(extreme_df,land_area_mapped,on=['fips','new_fips'],how='inner')
@@ -195,9 +199,10 @@ del extreme_df_ind['day_of_year']
 extreme_df_ind = extreme_df_ind.drop_duplicates()
 extreme_df_ind.to_csv('extremes.csv',index=False)
 mean_dataframes_summed = {}
+
 for ftype in filetype:
     mean_dataframes[ftype] = pd.merge(mean_dataframes[ftype],fips_crosswalk,on=['fips'],how='inner')
-    mean_dataframes[ftype] = pd.merge(mean_dataframes[ftype],land_area_mapped,on=['fips','new_fips'],how='inner')
+    mean_dataframes[ftype] = pd.merge(mean_dataframes[ftype],land_area_mapped_mdf,on=['fips','new_fips'],how='inner')
     mean_dataframes[ftype]['wght'] = mean_dataframes[ftype]['land_area']/mean_dataframes[ftype]['new_land_area']
     variables = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec']
     mean_dataframes_summed[ftype] = {'jan':None,'feb':None,'mar':None,'apr':None,'may':None,'jun':None, \
@@ -225,5 +230,4 @@ tmin = mean_dataframes['tmincy']
 tmin.to_csv('tmin.csv',index=False)
 tavg = mean_dataframes['tmpccy']
 tavg.to_csv('tavg.csv',index=False)
-
 
