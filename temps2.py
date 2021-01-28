@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 #SETUP
 cd = os.path.join(os.path.expanduser("~"),r'Documents',r'projects',r'temps')
 cd_dotdot = os.path.join(os.path.expanduser("~"),r'Documents',r'projects')
+if not os.path.exists(os.path.join(cd,r'simple_maps')):
+    os.makedirs(os.path.join(cd,r'simple_maps'))
 
 #LOAD WEATHER
 extreme_df_path = os.path.join(cd,'extremes.csv')
@@ -34,8 +36,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 jan_avg_df.plot(ax=ax, column='jan',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average January Temperature (1970-2000)')
-plt.show()
-
+jan_avg_path = os.path.join(cd,r'simple_maps','jan_avg.png')
+plt.savefig(jan_avg_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #July Average
 jul_avg_data = tavg[['fips','jul']].copy()
 jul_avg_data['fips'] = jul_avg_data['fips'].astype(str)
@@ -46,8 +49,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 jul_avg_df.plot(ax=ax,column='jul',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average July Temperature (1970-2000)')
-plt.show()
-
+jul_avg_path = os.path.join(cd,r'simple_maps','jul_avg.png')
+plt.savefig(jul_avg_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days above 25
 above_25_data = extremes[['fips','avg_daily_max_air_temp_25']].copy()
 above_25_data['fips'] = above_25_data['fips'].astype(str)
@@ -58,9 +62,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_25_df.plot(ax=ax,column='avg_daily_max_air_temp_25',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 25 (1979-2011)')
-plt.show()
-
-
+above_25_path = os.path.join(cd,r'simple_maps','above_25.png')
+plt.savefig(above_25_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days above 30
 above_30_data = extremes[['fips','avg_daily_max_air_temp_30']].copy()
 above_30_data['fips'] = above_30_data['fips'].astype(str)
@@ -71,8 +75,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_30_df.plot(ax=ax,column='avg_daily_max_air_temp_30',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 30 (1979-2011)')
-plt.show()
-
+above_30_path = os.path.join(cd,r'simple_maps','above_30.png')
+plt.savefig(above_30_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days below 35
 above_35_data = extremes[['fips','avg_daily_max_air_temp_35']].copy()
 above_35_data['fips'] = above_35_data['fips'].astype(str)
@@ -83,8 +88,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_35_df.plot(ax=ax,column='avg_daily_max_air_temp_35',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 35 (1979-2011)')
-plt.show()
-
+above_35_path = os.path.join(cd,r'simple_maps','above_35.png')
+plt.savefig(above_35_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days below 45
 above_45_data = extremes[['fips','avg_daily_max_air_temp_45']].copy()
 above_45_data['fips'] = above_45_data['fips'].astype(str)
@@ -95,9 +101,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_45_df.plot(ax=ax,column='avg_daily_max_air_temp_45',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 45 (1979-2011)')
-plt.show()
-
-
+above_45_path = os.path.join(cd,r'simple_maps','above_45.png')
+plt.savefig(above_45_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days over 80
 above_80_data = extremes[['fips','avg_daily_max_air_temp_80']].copy()
 above_80_data['fips'] = above_80_data['fips'].astype(str)
@@ -108,8 +114,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_80_df.plot(ax=ax,column='avg_daily_max_air_temp_80',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 80 (1979-2011)')
-plt.show()
-
+above_80_path = os.path.join(cd,r'simple_maps','above_80.png')
+plt.savefig(above_80_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days over 85
 above_85_data = extremes[['fips','avg_daily_max_air_temp_85']].copy()
 above_85_data['fips'] = above_85_data['fips'].astype(str)
@@ -120,8 +127,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_85_df.plot(ax=ax,column='avg_daily_max_air_temp_85',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 85 (1979-2011)')
-plt.show()
-
+above_85_path = os.path.join(cd,r'simple_maps','above_85.png')
+plt.savefig(above_85_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days over 90
 above_90_data = extremes[['fips','avg_daily_max_air_temp_90']].copy()
 above_90_data['fips'] = above_90_data['fips'].astype(str)
@@ -132,8 +140,9 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_90_df.plot(ax=ax,column='avg_daily_max_air_temp_90',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 90 (1979-2011)')
-plt.show()
-
+above_90_path = os.path.join(cd,r'simple_maps','above_90.png')
+plt.savefig(above_90_path,bbox_inches='tight',dpi=300)
+plt.clf()
 #Days over 95
 above_95_data = extremes[['fips','avg_daily_max_air_temp_95']].copy()
 above_95_data['fips'] = above_95_data['fips'].astype(str)
@@ -144,6 +153,8 @@ ax.axis('off')
 cmap = plt.get_cmap('bwr')
 above_95_df.plot(ax=ax,column='avg_daily_max_air_temp_95',legend=True,linewidth=0.2,edgecolor='gray',cmap=cmap)
 plt.title('Average # of Days w/ a  Max. Air Temp. Above 95 (1979-2011)')
-plt.show()
+above_95_path = os.path.join(cd,r'simple_maps','above_95.png')
+plt.savefig(above_95_path,bbox_inches='tight',dpi=300)
+plt.clf()
 
 
